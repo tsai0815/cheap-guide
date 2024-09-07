@@ -61,6 +61,23 @@ function error(msg) {
     console.log("gps failed");
 }
 
+function parseDateToMDTime(date) {
+    // Ensure the input is a Date object
+    if (!(date instanceof Date)) {
+        date = new Date(date);
+    }
+
+    // Extract month, day, hours, and minutes
+    const month = date.getMonth() + 1; // Months are 0-based
+    const day = date.getDate();
+    const hours = date.getHours().toString().padStart(2, '0'); // Pad single-digit hours
+    const minutes = date.getMinutes().toString().padStart(2, '0'); // Pad single-digit minutes
+
+    // Return formatted date string
+    return `${month}/${day} ${hours}:${minutes}`;
+}
+
+
 // Attach event listener to the submit button
 document.getElementById('submit-item-button').addEventListener('click', function (event) {
     const newItem = {
@@ -70,6 +87,7 @@ document.getElementById('submit-item-button').addEventListener('click', function
         description: document.getElementById('description').value,
         latitude: marker.getPosition().lat(),
         longitude: marker.getPosition().lng(),
+        lastEditTime: parseDateToMDTime(new Date()),
         image: '' // Placeholder for image data
     };
 

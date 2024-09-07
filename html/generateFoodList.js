@@ -12,8 +12,7 @@ function displayItems() {
         const card = document.createElement('div');
         card.innerHTML = `
         <div class="card"; style="cursor: pointer;" onclick="editItem(${index})"> 
-        <div class="offer-badge">500m</div>
-        <div class="top-right-badge">數量: ${item.quantity} ${item.unit}</div>
+        <div class="offer-badge">數量: ${item.quantity} ${item.unit}</div>
         <img src="${item.image}" onerror="this.onerror=null"; class="food-image";>
         <div class="card-content" >
             <div class="title-section">
@@ -22,10 +21,11 @@ function displayItems() {
             <div class="details">
                 <div class="left-content">
                     <p>台灣大學男一舍</p>
-                    <p>發布時間 9/7 18:06</p>
+                    <p>最後更新 ${item.lastEditTime}</p>
                 </div>
                 <button class="delete-button" onclick="deleteItem(${index}); event.stopPropagation();">DELETE</button> <!-- Delete Button -->
             </div>
+        </div>
         </div>
     `;
         itemList.appendChild(card);
