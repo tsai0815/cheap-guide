@@ -1,4 +1,5 @@
 let map, marker;
+let initialPosition = { lat: 25, lng: 121 };
 
 // Google Maps Initialization
 function initMap() {
