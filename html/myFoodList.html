@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Foods</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Food Items</h1>
+    <ul id="item-list">
+        <!-- List will be populated from localStorage -->
+    </ul>
+    <button id="add-item">Add Item</button>
+
+    <script>
+        const itemList = document.getElementById('item-list');
+
+        // Load items from localStorage
+        const items = JSON.parse(localStorage.getItem('items')) || [];
+
+        // Function to display items
+        function displayItems() {
+            itemList.innerHTML = '';
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div><strong>${item.name}</strong></div>
+                    <div>${item.quantity} ${item.unit}</div>
+                    <img src="${item.image}" alt="Food Image" width="100">
+                    <button onclick="editItem(${index})">Edit</button>
+                `;
+                itemList.appendChild(li);
+            });
+        }
+
+        // Redirect to foodForum.html when adding a new item
+        document.getElementById('add-item').addEventListener('click', () => {
+            localStorage.removeItem('editIndex');
+            window.location.href = 'foodForm.html';
+        });
+
+        // Edit item
+        function editItem(index) {
+            localStorage.setItem('editIndex', index); // Store the index of the item being edited
+            window.location.href = 'foodForm.html';
+        }
+
+        displayItems();
+    </script>
+</body>
+</html>
