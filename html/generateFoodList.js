@@ -20,7 +20,7 @@ function displayItems() {
             </div>
             <div class="details">
                 <div class="left-content">
-                    <p>台灣大學男一舍</p>
+                    <p>${item.addressName}</p>
                     <p>最後更新 ${item.lastEditTime}</p>
                 </div>
                 <button class="delete-button" onclick="deleteItem(${index}); event.stopPropagation();">DELETE</button> <!-- Delete Button -->

@@ -61,17 +61,14 @@ function error(msg) {
     console.log("gps failed");
 }
 
-function parseDateToMDTime(date) {
-    // Ensure the input is a Date object
-    if (!(date instanceof Date)) {
-        date = new Date(date);
-    }
+function getMDTime() {
+    let currentDate = new Date();
 
     // Extract month, day, hours, and minutes
-    const month = date.getMonth() + 1; // Months are 0-based
-    const day = date.getDate();
-    const hours = date.getHours().toString().padStart(2, '0'); // Pad single-digit hours
-    const minutes = date.getMinutes().toString().padStart(2, '0'); // Pad single-digit minutes
+    const month = currentDate.getMonth() + 1; // Months are 0-based
+    const day = currentDate.getDate();
+    const hours = currentDate.getHours().toString().padStart(2, '0'); // Pad single-digit hours
+    const minutes = currentDate.getMinutes().toString().padStart(2, '0'); // Pad single-digit minutes
 
     // Return formatted date string
     return `${month}/${day} ${hours}:${minutes}`;
@@ -79,7 +76,24 @@ function parseDateToMDTime(date) {
 
 
 // Attach event listener to the submit button
-document.getElementById('submit-item-button').addEventListener('click', function (event) {
+document.getElementById('submit-item-button').addEventListener('click', async function (event) {
+    const apiKey = "AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA"; // 將這裡替換為您的實際 API 金鑰
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${marker.getPosition().lat()},${marker.getPosition().lng()}&key=${apiKey}`;
+    let data;
+    try {
+        const response = await fetch(url);
+        if (response.ok) {
+            data = await response.json();
+            // 轉換為格式化的字符串，然後使用 alert 彈出
+            data = data.results[0].formatted_address
+            console.log(data);
+        } else {
+            console.log(`HTTP Error: ${response.status}`);
+        }
+    } catch (error) {
+        console.log(`Error: ${error.message}`);
+    }
+
     const newItem = {
         name: document.getElementById('name').value,
         quantity: document.getElementById('quantity').value,
@@ -87,10 +101,11 @@ document.getElementById('submit-item-button').addEventListener('click', function
         description: document.getElementById('description').value,
         latitude: marker.getPosition().lat(),
         longitude: marker.getPosition().lng(),
-        lastEditTime: parseDateToMDTime(new Date()),
+        addressName: data,
+        lastEditTime: getMDTime(),
         image: '' // Placeholder for image data
     };
-
+    
     // Handle image upload
     const imageInput = document.getElementById('image').files[0];
     if (imageInput) {
