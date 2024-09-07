@@ -23,7 +23,6 @@
                 class="transition-transform"
               /><span class="text-primary-500 font-bold ml-2">新增食物</span>
             </div>
-
           </button>
           <div class="grid grid-rows-[0fr] transition-all grid-rows-[1fr]">
             <div class="overflow-hidden flex flex-col gap-4 pt-5">
@@ -94,8 +93,12 @@
         </div>
       </section>
       <div class="grid grid-cols-2 gap-x-2 px-2">
-        <button type="button" class="btn btn-outline">取消</button>
-        <button type="button" class="btn btn-primary">新增</button>
+        <a
+          href="/"
+          class="base-button text-center base-button--outline"
+          disabled="false"
+          >取消</a
+        ><button class="base-button base-button--rectangular">新增</button>
       </div>
       <!-- 刪除 "FormPreview" 組件的部分 -->
     </div>
