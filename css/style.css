@@ -82,6 +82,39 @@ body {
 
 }
 
+/* food */
+.food-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.food-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 200px; /* 設定固定高度以確保圖片占比 */
+}
+
+.food-item img {
+    width: 100%;
+    height: 70%; /* 設定圖片高度為block的70% */
+    object-fit: cover; /* 確保圖片覆蓋整個區域 */
+    margin: 0; /* 移除任何潛在的留白 */
+    display: block; /* 移除底部可能出現的空白間距 */
+}
+
+.food-item .description {
+    flex: 1; /* 剩餘的空間由描述填充 */
+    padding: 10px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
 hr {
     height: 0;
     color: inherit;

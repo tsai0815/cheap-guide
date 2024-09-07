@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Foods</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- <link rel="stylesheet" href="../css/style.css"> -->
+    <link rel="stylesheet" href="../css/food-list-style.css">
 </head>
 <body>
-    <h1>Food Items</h1>
-    <ul id="item-list">
+    <!-- <h1>Food Items</h1>
+    <ul id="item-list"> -->
         <!-- List will be populated from localStorage -->
-    </ul>
-    <button id="add-item">Add Item</button>
+    <!-- </ul>
+    <button id="add-item">Add Item</button> -->
 
-    <script>
+    <!-- <script>
         const itemList = document.getElementById('item-list');
 
         // Load items from localStorage
@@ -47,6 +48,38 @@
         }
 
         displayItems();
-    </script>
+    </script> -->
+    <div class="card-container">
+    <div class="card">
+        <div class="offer-badge">500m</div>
+        <img src="../img/noodles.png" alt="Food Image" class="food-image">
+        <div class="card-content">
+            <div class="title-section">
+                <span class="title">大仁鍋貼</span>
+            </div>
+            <div class="details">
+                <div class="left-content">
+                    <p>台灣大學男一舍</p>
+                    <p>發布時間 9/7 18:06</p>
+                </div>
+                <span class="category">數量: 69</span>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="offer-badge">500m</div>
+        <img src="../img/noodles.png" alt="Food Image" class="food-image">
+        <div class="card-content">
+            <div class="title-section">
+                <span class="title">大仁鍋貼</span>
+            </div>
+            <div class="details">
+                <p>發布時間 9/7 18:06</p>
+                <span class="category">數量: 69</span>
+            </div>
+        </div>
+    </div>
+    </div>
+    </body>
 </body>
 </html>
