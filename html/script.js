@@ -1,14 +1,13 @@
-let map, marker;
+let map, marker, initialPosition;
 
 // Google Maps Initialization
 function initMap() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success, error);
     } else {
-        alert('geolocation not supported');
+        console.log('gps not supported');
     }
     
-    const initialPosition = { lat: -34.397, lng: 150.644 }; // Default location
     map = new google.maps.Map(document.getElementById('map'), {
         center: initialPosition,
         zoom: 8
@@ -29,11 +28,13 @@ function initMap() {
 
 
 function success(position) {
-    alert(position.coords.latitude + ', ' + position.coords.longitude);
+    console.log(position.coords.latitude + ', ' + position.coords.longitude);
+    initialPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
 }
 
 function error(msg) {
-    alert('error: ' + msg);
+    console.log("gps failed");
+    initialPosition = { lat: 25.0249216, lng: 121.5266816 };
 }
 
 // Load Google Maps script
@@ -67,8 +68,8 @@ document.getElementById('submit-item-button').addEventListener('click', function
         quantity: document.getElementById('quantity').value,
         unit: document.getElementById('unit').value,
         description: document.getElementById('description').value,
-        latitude: document.getElementById('latitude').value,
-        longitude: document.getElementById('longitude').value,
+        latitude: marker.getPosition().lat(),
+        longitude: marker.getPosition().lng(),
         image: '' // Placeholder for image data
     };
 
