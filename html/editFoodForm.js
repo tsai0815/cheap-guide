@@ -1,5 +1,4 @@
 let map, marker;
-let initialPosition = { lat: 25, lng: 121 };
 
 // Google Maps Initialization
 function initMap() {
@@ -9,7 +8,7 @@ function initMap() {
         alert('geolocation not supported');
     }
     
-    const initialPosition = { lat: -34.397, lng: 150.644 }; // Default location
+    const initialPosition = { lat: 25, lng: 121 }; // Default location
     map = new google.maps.Map(document.getElementById('map'), {
         center: initialPosition,
         zoom: 8
