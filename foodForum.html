@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Forum</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1 id="form-title">Add New Food</h1>
+    <form id="food-form">
+        <label for="name">Food Name:</label>
+        <input type="text" id="name" required><br>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" required><br>
+
+        <label for="unit">Unit:</label>
+        <input type="text" id="unit" required><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description"></textarea><br>
+
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" accept="image/*"><br>
+
+        <label>Select Location on Map:</label>
+        <div id="map" style="height: 300px; width: 100%;"></div>
+        <input type="hidden" id="latitude">
+        <input type="hidden" id="longitude">
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        let map, marker;
+
+        // Google Maps Initialization
+        function initMap() {
+            const initialPosition = { lat: -34.397, lng: 150.644 }; // Default location
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: initialPosition,
+                zoom: 8
+            });
+
+            marker = new google.maps.Marker({
+                position: initialPosition,
+                map: map,
+                draggable: true
+            });
+
+            // Update latitude and longitude on marker drag
+            google.maps.event.addListener(marker, 'dragend', function () {
+                document.getElementById('latitude').value = marker.getPosition().lat();
+                document.getElementById('longitude').value = marker.getPosition().lng();
+            });
+        }
+
+        // Load Google Maps script
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCR-Xf5Pd5MC9bJejrgROSGacSUNBoVXDw&callback=initMap`;
+        script.async = true;
+        document.head.appendChild(script);
+
+        // Get the index of the item being edited (if any)
+        const editIndex = localStorage.getItem('editIndex');
+        let items = JSON.parse(localStorage.getItem('items')) || [];
+
+        // Pre-fill form if editing
+        if (editIndex !== null) {
+            const item = items[editIndex];
+            document.getElementById('name').value = item.name;
+            document.getElementById('quantity').value = item.quantity;
+            document.getElementById('unit').value = item.unit;
+            document.getElementById('description').value = item.description;
+            document.getElementById('latitude').value = item.latitude;
+            document.getElementById('longitude').value = item.longitude;
+            marker.setPosition({ lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) });
+            map.setCenter(marker.getPosition());
+            document.getElementById('form-title').textContent = "Edit Food";
+        }
+
+        // Handle form submission
+        // Handle form submission
+        document.getElementById('food-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting the usual way
+
+            const newItem = {
+                name: document.getElementById('name').value,
+                quantity: document.getElementById('quantity').value,
+                unit: document.getElementById('unit').value,
+                description: document.getElementById('description').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value,
+                image: '' // Placeholder for image data
+            };
+
+            // Handle image upload
+            const imageInput = document.getElementById('image').files[0];
+            if (imageInput) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    newItem.image = e.target.result; // Store image as base64
+                    saveItem(newItem); // Save the item after image processing
+                };
+                reader.readAsDataURL(imageInput); // Convert image to base64
+            } else {
+                saveItem(newItem); // Save item without image
+            }
+        });
+
+        // Save item and redirect
+        function saveItem(item) {
+            const editIndex = localStorage.getItem('editIndex');
+            let items = JSON.parse(localStorage.getItem('items')) || [];
+
+            if (editIndex !== null) {
+                items[editIndex] = item; // Update the existing item
+            } else {
+                items.push(item); // Add a new item
+            }
+
+            localStorage.setItem('items', JSON.stringify(items)); // Save items back to localStorage
+
+            // Redirect to myFoods.html after saving
+            window.location.href = 'myFoods.html';
+        }
+
+    </script>
+</body>
+
+</html>
