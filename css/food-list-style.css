@@ -88,3 +88,20 @@ body {
   padding: 2px 6px;
   border-radius: 4px;
 }
+
+.add-button {
+  position: fixed; /* 固定在視窗 */
+  bottom: 5px; /* 距離底部 20px */
+  right: 5px; /* 距離右邊 20px */
+  background: none; /* 無背景 */
+  border: none; /* 無邊框 */
+  padding: 0; /* 無內距 */
+  cursor: pointer; /* 滑鼠移到按鈕上顯示手型 */
+  display: flex; /* 使按鈕內的圖片可以居中對齊 */
+  align-items: center; /* 垂直置中 */
+}
+
+.add-icon {
+  width: 50px; /* 設置圖標寬度 */
+  height: 50px; /* 設置圖標高度 */
+}
