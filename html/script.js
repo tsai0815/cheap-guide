@@ -2,6 +2,12 @@ let map, marker;
 
 // Google Maps Initialization
 function initMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+        alert('geolocation not supported');
+    }
+    
     const initialPosition = { lat: -34.397, lng: 150.644 }; // Default location
     map = new google.maps.Map(document.getElementById('map'), {
         center: initialPosition,
@@ -19,6 +25,15 @@ function initMap() {
         document.getElementById('latitude').value = marker.getPosition().lat();
         document.getElementById('longitude').value = marker.getPosition().lng();
     });
+}
+
+
+function success(position) {
+    alert(position.coords.latitude + ', ' + position.coords.longitude);
+}
+
+function error(msg) {
+    alert('error: ' + msg);
 }
 
 // Load Google Maps script

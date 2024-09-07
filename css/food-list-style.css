@@ -1,26 +1,26 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
 }
 
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 }
+
 .card-container {
-  margin-top: 20px;
+  /* margin-top: 2000px; */
+  display: flex;
+  flex-direction: column; /* Items stack vertically */
+  width: 100%; /* Make container fill the full width */
 }
 
 .card {
   background-color: white;
   border-radius: 8px;
   overflow: hidden;
-  width: 300px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   margin: 10px;
@@ -39,8 +39,9 @@ body {
 
 .food-image {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
+  height: auto;
+  max-height: calc(300vw / 5);
+  object-fit: fill;
 }
 
 .card-content {
