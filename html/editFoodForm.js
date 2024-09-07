@@ -53,9 +53,8 @@ if (editIndex !== null) {
     document.getElementById('quantity').value = item.quantity;
     document.getElementById('unit').value = item.unit;
     document.getElementById('description').value = item.description;
-    document.getElementById('address').value = item.address;
-    // document.getElementById('latitude').value = item.latitude;
-    // document.getElementById('longitude').value = item.longitude;
+    document.getElementById('latitude').value = item.latitude;
+    document.getElementById('longitude').value = item.longitude;
     marker.setPosition({ lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) });
     map.setCenter(marker.getPosition());
     document.getElementById('form-title').textContent = "Edit Food";
@@ -68,9 +67,8 @@ document.getElementById('submit-item-button').addEventListener('click', function
         quantity: document.getElementById('quantity').value,
         unit: document.getElementById('unit').value,
         description: document.getElementById('description').value,
-        address: document.getElementById('address').value,
-        // latitude: document.getElementById('latitude').value,
-        // longitude: document.getElementById('longitude').value,
+        latitude: document.getElementById('latitude').value,
+        longitude: document.getElementById('longitude').value,
         image: '' // Placeholder for image data
     };
 

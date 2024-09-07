@@ -1,3 +1,5 @@
+localStorage.setItem('editIndex', null);
+
 const itemList = document.getElementById('item-list');
 
 // Load items from localStorage
