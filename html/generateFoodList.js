@@ -1,4 +1,4 @@
-localStorage.setItem('editIndex', null);
+localStorage.setItem('editIndex', "null");
 
 const itemList = document.getElementById('item-list');
 

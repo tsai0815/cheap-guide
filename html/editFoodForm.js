@@ -30,7 +30,7 @@ function initMap() {
 function success(position) {
     console.log(position.coords.latitude + ', ' + position.coords.longitude);
     initialPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
-    map.setCenter(position.coords.latitude, position.coords.longitude, 8);
+    map.setCenter(initialPosition, 8);
 }
 
 function error(msg) {
@@ -49,18 +49,14 @@ console.log("editIndex: ", editIndex);
 let items = JSON.parse(localStorage.getItem('items')) || [];
 
 // Pre-fill form if editing
-if (editIndex !== null) {
+if (editIndex !== "null") {
     const item = items[editIndex];
-    localStorage.setItem('editIndex', null);
     document.getElementById('name').value = item.name;
     document.getElementById('quantity').value = item.quantity;
     document.getElementById('unit').value = item.unit;
     document.getElementById('description').value = item.description;
     document.getElementById('latitude').value = item.latitude;
     document.getElementById('longitude').value = item.longitude;
-    marker.setPosition({ lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) });
-    map.setCenter(marker.getPosition());
-    document.getElementById('form-title').textContent = "Edit Food";
 }
 
 // Attach event listener to the submit button
@@ -94,7 +90,7 @@ function saveItem(item) {
     const editIndex = localStorage.getItem('editIndex');
     let items = JSON.parse(localStorage.getItem('items')) || [];
 
-    if (editIndex !== null) {
+    if (editIndex !== "null") {
         items[editIndex] = item; // Update the existing item
     } else {
         items.push(item); // Add a new item
