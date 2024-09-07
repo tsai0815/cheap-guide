@@ -11,6 +11,11 @@ function initMap() {
   geocoder = new google.maps.Geocoder();
   addMarkersFromLocalStorage();
   getUserLocation();
+
+  // 添加地圖點擊事件監聽器
+  map.addListener('click', function() {
+    resetToDefaultState();
+  });
 }
 
 function getUserLocation() {
@@ -105,15 +110,27 @@ function addMarkersFromLocalStorage() {
       showInfoPanel(name, quantity, description, markerInfo.imageUrl, markerInfo.distance);
     });
 
-    // 更新所有標記點與用戶位置的距離
+    // 更新���有標記點與用戶位置的距離
     if (userMarker) {
       updateDistances(userMarker.getPosition());
     }
   });
 }
 
+// 新增重置到預設狀態的函數
+function resetToDefaultState() {
+  // 隱藏信息面板
+  document.getElementById('info-panel').style.display = 'none';
+  
+  // 隱藏附近信息面板（如果顯示的話）
+  hideNearbyInfo();
+  
+  // 如果有選中的標記，可以取消其選中狀態
+  // 這裡需要根據您的具體實現來調整
+  // 例如：selectedMarker.setIcon(defaultIcon);
+}
 
-
+// 修改 showInfoPanel 函數
 function showInfoPanel(name, quantity, description, imageUrl, distance) {
   document.getElementById('place-name').textContent = name;
   document.getElementById('place-quantity').textContent = '數量: ' + quantity;
@@ -121,6 +138,11 @@ function showInfoPanel(name, quantity, description, imageUrl, distance) {
   document.getElementById('place-image').src = imageUrl;
   document.getElementById('place-distance').textContent = '距離: ' + distance + ' 公尺';
   document.getElementById('info-panel').style.display = 'block';
+
+  // 阻止事件冒泡，這樣點擊信息面板時不會觸發地圖的點擊事件
+  document.getElementById('info-panel').addEventListener('click', function(event) {
+    event.stopPropagation();
+  });
 }
 
 function showNearbyInfo() {
@@ -128,6 +150,8 @@ function showNearbyInfo() {
   const nearbyInfoContent = document.getElementById('nearby-info-content');
   const goButton = document.getElementById('go-button');
   const cancelButton = document.getElementById('cancel-button');
+  const myButton = document.querySelector('.my-button');
+  const addButton = document.querySelector('.add-button');
   
   // 按距離排序所有標記點
   markers.sort((a, b) => a.distance - b.distance);
@@ -157,15 +181,21 @@ function showNearbyInfo() {
 
   nearbyInfo.style.display = 'flex';
   goButton.style.display = 'none';
-  cancelButton.style.display = 'block';
+  cancelButton.style.display = 'flex';
+  myButton.style.display = 'none';
+  addButton.style.display = 'none';
 }
 
 function hideNearbyInfo() {
   const nearbyInfo = document.getElementById('nearby-info');
   const goButton = document.getElementById('go-button');
   const cancelButton = document.getElementById('cancel-button');
+  const myButton = document.querySelector('.my-button');
+  const addButton = document.querySelector('.add-button');
 
   nearbyInfo.style.display = 'none';
-  goButton.style.display = 'block';
+  goButton.style.display = 'flex';
   cancelButton.style.display = 'none';
+  myButton.style.display = 'flex';
+  addButton.style.display = 'flex';
 }
