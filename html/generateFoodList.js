@@ -23,7 +23,7 @@ function displayItems() {
                     <p>${item.addressName}</p>
                     <p>最後更新 ${item.lastEditTime}</p>
                 </div>
-                <button class="delete-button" onclick="deleteItem(${index}); event.stopPropagation();">DELETE</button> <!-- Delete Button -->
+                <button class="delete-button" onclick="deleteItem(${index}); event.stopPropagation();">發放完畢</button> <!-- Delete Button -->
             </div>
         </div>
         </div>
