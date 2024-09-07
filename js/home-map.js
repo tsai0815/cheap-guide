@@ -9,7 +9,7 @@ function initMap() {
     zoom: 13,
   });
   geocoder = new google.maps.Geocoder();
-  addInitialMarkers();
+  addMarkersFromLocalStorage();
   getUserLocation();
 }
 
@@ -72,46 +72,47 @@ function updateDistances(userLocation) {
   updateMarkerList();
 }
 
-function addInitialMarkers() {
-  const initialPoints = [
-    { address: '臺北市羅斯福路四段一號', name: '熱狗', quantity: 2, description: '789' },
-    { address: '臺北市羅斯福路二段四號', name: '熱狗', quantity: 2, description: '789' },
-    { address: '臺北市羅斯福路一段四號', name: '熱狗', quantity: 2, description: '789' },
-    { address: '新北市新生街112巷四號', name: '熱狗', quantity: 2, description: '789' }
-  ];
+function addMarkersFromLocalStorage() {
+  const items = JSON.parse(localStorage.getItem('items')) || [];
 
-  initialPoints.forEach(point => {
-    geocoder.geocode({ 'address': point.address }, function(results, status) {
-      if (status === 'OK') {
-        const marker = new google.maps.Marker({
-          position: results[0].geometry.location,
-          map: map,
-        });
+  items.forEach(item => {
+    const { latitude, longitude, name, quantity, description, image } = item;
 
-        const markerInfo = {
-          position: results[0].geometry.location,
-          name: point.name,
-          quantity: point.quantity,
-          description: point.description,
-          imageUrl: 'https://via.placeholder.com/150', // 使用佔位圖片
-          distance: 0 // 初始距離設為0
-        };
+    if (!latitude || !longitude) {
+      console.error('Missing latitude or longitude for item:', item);
+      return;
+    }
 
-        markers.push(markerInfo);
-
-        marker.addListener('click', () => {
-          showInfoPanel(markerInfo.name, markerInfo.quantity, markerInfo.description, markerInfo.imageUrl, markerInfo.distance);
-        });
-
-        if (userMarker) {
-          updateDistances(userMarker.getPosition());
-        }
-      } else {
-        console.error('Geocode was not successful for the following reason: ' + status);
-      }
+    // 使用經緯度創建標記
+    const marker = new google.maps.Marker({
+      position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+      map: map,
     });
+
+    const markerInfo = {
+      position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+      name: name,
+      quantity: quantity,
+      description: description,
+      imageUrl: image || 'https://via.placeholder.com/150', // 如果沒有圖片則使用佔位符
+      distance: 0 // 初始距離設為0
+    };
+
+    markers.push(markerInfo);
+
+    // 添加標記點的點擊事件
+    marker.addListener('click', () => {
+      showInfoPanel(name, quantity, description, markerInfo.imageUrl, markerInfo.distance);
+    });
+
+    // 更新所有標記點與用戶位置的距離
+    if (userMarker) {
+      updateDistances(userMarker.getPosition());
+    }
   });
 }
+
+
 
 function showInfoPanel(name, quantity, description, imageUrl, distance) {
   document.getElementById('place-name').textContent = name;
@@ -169,52 +170,3 @@ function hideNearbyInfo() {
   cancelButton.style.display = 'none';
 }
 
-function addMarkerFromInput() {
-  const address = document.getElementById('address').value;
-  const name = document.getElementById('name').value;
-  const quantity = document.getElementById('quantity').value;
-  const description = document.getElementById('description').value;
-  const imageFile = document.getElementById('image').files[0];
-
-  if (!imageFile) {
-    alert('請選擇一張圖片');
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const imageUrl = e.target.result;
-    geocoder.geocode({ 'address': address }, function(results, status) {
-      if (status === 'OK') {
-        const marker = new google.maps.Marker({
-          position: results[0].geometry.location,
-          map: map,
-        });
-
-        const markerInfo = {
-          position: results[0].geometry.location,
-          name: name,
-          quantity: quantity,
-          description: description,
-          imageUrl: imageUrl,
-          distance: 0 // 初始距離設為0
-        };
-
-        markers.push(markerInfo);
-
-        marker.addListener('click', () => {
-          showInfoPanel(name, quantity, description, imageUrl, markerInfo.distance);
-        });
-
-        map.setCenter(results[0].geometry.location);
-
-        if (userMarker) {
-          updateDistances(userMarker.getPosition());
-        }
-      } else {
-        alert('地址轉換失敗：' + status);
-      }
-    });
-  };
-  reader.readAsDataURL(imageFile);
-}
