@@ -10,13 +10,15 @@
 <body>
     <div id="map"></div>
     <div id="input-container">
+        <a href="myFoods.html" class="my-button">我的</a>
         <button id="go-button" class="go-button" onclick="showNearbyInfo()">Go</button>
+        <a href="foodForm.html" class="add-button">新增</a>
     </div>
     <div id="nearby-info">
         <div id="nearby-info-content"></div>
     </div>
-    <div id="input-container">
-      <button id="cancel-button" class="cancel-button" onclick="hideNearbyInfo()" style="display:none;">取消</button>
+    <div id="cancel-container">
+      <button id="cancel-button" class="cancel-button" onclick="hideNearbyInfo()" style="display:none;">×</button>
     </div>
     <div id="info-panel">
         <div id="info-panel-content">
@@ -29,7 +31,6 @@
             <img id="place-image" src="" alt="Place Image">
         </div>
     </div>
-
 
     <!-- 引入 Google Maps API，注意添加了 geometry 庫 -->
     <script

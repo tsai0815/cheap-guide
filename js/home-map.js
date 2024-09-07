@@ -169,4 +169,3 @@ function hideNearbyInfo() {
   goButton.style.display = 'block';
   cancelButton.style.display = 'none';
 }
-
