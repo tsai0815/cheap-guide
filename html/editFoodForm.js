@@ -1,4 +1,5 @@
-let map, marker, initialPosition;
+let map, marker;
+let initialPosition = { lat: 25, lng: 121 };
 
 // Google Maps Initialization
 function initMap() {
@@ -7,7 +8,7 @@ function initMap() {
     } else {
         console.log('gps not supported');
     }
-    
+
     map = new google.maps.Map(document.getElementById('map'), {
         center: initialPosition,
         zoom: 8
@@ -26,15 +27,14 @@ function initMap() {
     });
 }
 
-
 function success(position) {
     console.log(position.coords.latitude + ', ' + position.coords.longitude);
     initialPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
+    map.setCenter(position.coords.latitude, position.coords.longitude, 8);
 }
 
 function error(msg) {
     console.log("gps failed");
-    initialPosition = { lat: 25.0249216, lng: 121.5266816 };
 }
 
 // Load Google Maps script
@@ -45,11 +45,13 @@ document.head.appendChild(script);
 
 // Get the index of the item being edited (if any)
 const editIndex = localStorage.getItem('editIndex');
+console.log("editIndex: ", editIndex);
 let items = JSON.parse(localStorage.getItem('items')) || [];
 
 // Pre-fill form if editing
 if (editIndex !== null) {
     const item = items[editIndex];
+    localStorage.setItem('editIndex', null);
     document.getElementById('name').value = item.name;
     document.getElementById('quantity').value = item.quantity;
     document.getElementById('unit').value = item.unit;
