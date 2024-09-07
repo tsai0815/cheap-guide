@@ -8,7 +8,7 @@ function initMap() {
         alert('geolocation not supported');
     }
     
-    const initialPosition = { lat: 25.033 , lng: 121.654 }; // Default location
+    const initialPosition = { lat: 25.033671 , lng: 121.564487 }; // Default location
     map = new google.maps.Map(document.getElementById('map'), {
         center: initialPosition,
         zoom: 8
