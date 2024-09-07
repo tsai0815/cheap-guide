@@ -1,5 +1,402 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Map GoShare Style</title>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+      }
+      #map {
+        height: 100%;
+        width: 100%;
+      }
+      #input-container {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+      }
+      .go-button {
+        background-color: #00b8a9;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #nearby-info {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 66.67vh;
+        background-color: white;
+        z-index: 20;
+        display: none;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      #nearby-info-content {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+      }
+      .info-item {
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      .info-item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
+      .info-item-text {
+        flex: 1;
+      }
+      .cancel-button {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        background-color: #f0f0f0;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 30;
+      }
+      #info-panel {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: white;
+        padding: 15px;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        display: none;
+        box-sizing: border-box;
+      }
+      #info-panel-content {
+        display: flex;
+        align-items: flex-start;
+      }
+      #info-text {
+        flex: 1;
+        padding-right: 15px;
+      }
+      #place-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+      #place-name {
+        margin: 0 0 5px 0;
+        font-size: 18px;
+      }
+      #place-quantity, #place-description, #place-distance {
+        margin: 0 0 5px 0;
+        font-size: 14px;
+      }
+      #add-marker-form {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 10;
+        font-size: 12px;
+      }
+      #add-marker-form input, #add-marker-form button {
+        margin: 2px 0;
+        padding: 2px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="input-container">
+        <button id="go-button" class="go-button" onclick="showNearbyInfo()">Go</button>
+    </div>
+    <div id="nearby-info">
+        <div id="nearby-info-content"></div>
+    </div>
+    <button id="cancel-button" class="cancel-button" onclick="hideNearbyInfo()" style="display:none;">取消</button>
+    <div id="info-panel">
+        <div id="info-panel-content">
+            <div id="info-text">
+                <h2 id="place-name"></h2>
+                <p id="place-quantity"></p>
+                <p id="place-description"></p>
+                <p id="place-distance"></p>
+            </div>
+            <img id="place-image" src="" alt="Place Image">
+        </div>
+    </div>
+    <form id="add-marker-form">
+        <input type="text" id="address" placeholder="地址" required>
+        <input type="text" id="name" placeholder="名稱" required>
+        <input type="number" id="quantity" placeholder="數量" required>
+        <input type="text" id="description" placeholder="描述" required>
+        <input type="file" id="image" accept="image/*" required>
+        <button type="button" onclick="addMarkerFromInput()">新增標記</button>
+    </form>
+
+    <script>
+      let map;
+      let geocoder;
+      let markers = [];
+      let userMarker;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 25.0330, lng: 121.5654 }, // 台北市的初始位置
+          zoom: 13,
+        });
+        geocoder = new google.maps.Geocoder();
+        addInitialMarkers();
+        getUserLocation();
+      }
+
+      function getUserLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              };
+              
+              // 添加用戶位置標記
+              userMarker = new google.maps.Marker({
+                position: userLocation,
+                map: map,
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 10,
+                  fillColor: "#4285F4",
+                  fillOpacity: 1,
+                  strokeWeight: 2,
+                  strokeColor: "#FFFFFF",
+                },
+                title: "您的位置",
+              });
+
+              // 將地圖中心設置為用戶位置
+              map.setCenter(userLocation);
+
+              // 計算並更新所有標記點與用戶位置的距離
+              updateDistances(userLocation);
+            },
+            () => {
+              handleLocationError(true, map.getCenter());
+            }
+          );
+        } else {
+          // 瀏覽器不支持地理位置
+          handleLocationError(false, map.getCenter());
+        }
+      }
+
+      function handleLocationError(browserHasGeolocation, pos) {
+        console.error(browserHasGeolocation
+          ? "Error: The Geolocation service failed."
+          : "Error: Your browser doesn't support geolocation.");
+      }
+
+      function updateDistances(userLocation) {
+        markers.forEach(markerInfo => {
+          const distance = google.maps.geometry.spherical.computeDistanceBetween(
+            new google.maps.LatLng(userLocation),
+            markerInfo.position
+          );
+          markerInfo.distance = Math.round(distance); // 四捨五入到整數米
+        });
+
+        // 更新顯示的信息
+        updateMarkerList();
+      }
+
+      function addInitialMarkers() {
+        const initialPoints = [
+          { address: '臺北市羅斯福路四段一號', name: '熱狗', quantity: 2, description: '789' },
+          { address: '臺北市羅斯福路二段四號', name: '熱狗', quantity: 2, description: '789' },
+          { address: '臺北市羅斯福路一段四號', name: '熱狗', quantity: 2, description: '789' },
+          { address: '新北市新生街112巷四號', name: '熱狗', quantity: 2, description: '789' }
+        ];
+
+        initialPoints.forEach(point => {
+          geocoder.geocode({ 'address': point.address }, function(results, status) {
+            if (status === 'OK') {
+              const marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: map,
+              });
+
+              const markerInfo = {
+                position: results[0].geometry.location,
+                name: point.name,
+                quantity: point.quantity,
+                description: point.description,
+                imageUrl: 'https://via.placeholder.com/150', // 使用佔位圖片
+                distance: 0 // 初始距離設為0
+              };
+
+              markers.push(markerInfo);
+
+              marker.addListener('click', () => {
+                showInfoPanel(markerInfo.name, markerInfo.quantity, markerInfo.description, markerInfo.imageUrl, markerInfo.distance);
+              });
+
+              if (userMarker) {
+                updateDistances(userMarker.getPosition());
+              }
+            } else {
+              console.error('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        });
+      }
+
+      function showInfoPanel(name, quantity, description, imageUrl, distance) {
+        document.getElementById('place-name').textContent = name;
+        document.getElementById('place-quantity').textContent = '數量: ' + quantity;
+        document.getElementById('place-description').textContent = description;
+        document.getElementById('place-image').src = imageUrl;
+        document.getElementById('place-distance').textContent = '距離: ' + distance + ' 公尺';
+        document.getElementById('info-panel').style.display = 'block';
+      }
+
+      function showNearbyInfo() {
+        const nearbyInfo = document.getElementById('nearby-info');
+        const nearbyInfoContent = document.getElementById('nearby-info-content');
+        const goButton = document.getElementById('go-button');
+        const cancelButton = document.getElementById('cancel-button');
+        
+        // 按距離排序所有標記點
+        markers.sort((a, b) => a.distance - b.distance);
+
+        // 清空之前的內容
+        nearbyInfoContent.innerHTML = '';
+
+        // 顯示所有標記點
+        markers.forEach(point => {
+          const itemElement = document.createElement('div');
+          itemElement.className = 'info-item';
+          itemElement.innerHTML = `
+            <img class="info-item-image" src="${point.imageUrl}" alt="${point.name}">
+            <div class="info-item-text">
+              <h3>${point.name}</h3>
+              <p>數量: ${point.quantity}</p>
+              <p>${point.description}</p>
+              <p>距離: ${point.distance} 公尺</p>
+            </div>
+          `;
+          nearbyInfoContent.appendChild(itemElement);
+        });
+
+        nearbyInfo.style.display = 'flex';
+        goButton.style.display = 'none';
+        cancelButton.style.display = 'block';
+      }
+
+      function hideNearbyInfo() {
+        const nearbyInfo = document.getElementById('nearby-info');
+        const goButton = document.getElementById('go-button');
+        const cancelButton = document.getElementById('cancel-button');
+
+        nearbyInfo.style.display = 'none';
+        goButton.style.display = 'block';
+        cancelButton.style.display = 'none';
+      }
+
+      function addMarkerFromInput() {
+        const address = document.getElementById('address').value;
+        const name = document.getElementById('name').value;
+        const quantity = document.getElementById('quantity').value;
+        const description = document.getElementById('description').value;
+        const imageFile = document.getElementById('image').files[0];
+
+        if (!imageFile) {
+          alert('請選擇一張圖片');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imageUrl = e.target.result;
+          geocoder.geocode({ 'address': address }, function(results, status) {
+            if (status === 'OK') {
+              const marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: map,
+              });
+
+              const markerInfo = {
+                position: results[0].geometry.location,
+                name: name,
+                quantity: quantity,
+                description: description,
+                imageUrl: imageUrl,
+                distance: 0 // 初始距離設為0
+              };
+
+              markers.push(markerInfo);
+
+              marker.addListener('click', () => {
+                showInfoPanel(name, quantity, description, imageUrl, markerInfo.distance);
+              });
+
+              map.setCenter(results[0].geometry.location);
+
+              if (userMarker) {
+                updateDistances(userMarker.getPosition());
+              }
+            } else {
+              alert('地址轉換失敗：' + status);
+            }
+          });
+        };
+        reader.readAsDataURL(imageFile);
+      }
+    </script>
+
+    <!-- 引入 Google Maps API，注意添加了 geometry 庫 -->
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA&libraries=geometry&callback=initMap"
+    ></script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="zh-TW">
   <head>
     <title>Google Map with Address, Info, and Image</title>
     <style>
@@ -97,11 +494,11 @@
     </script>
 
     <!-- 引入 Google Maps API -->
-    <script
+<!--     <script
       async
       defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxq5E8_KIe1XaWukL1a9WOib15AI-o1mQ
       &callback=initMap"
     ></script>
   </body>
-</html>
+</html> --> 
