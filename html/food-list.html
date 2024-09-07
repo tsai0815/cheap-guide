@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item List</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <!-- Page 1: List of Items -->
+    <div id="item-list-page">
+        <h1>Food Items</h1>
+        <ul id="item-list">
+            <!-- Items will be dynamically added here -->
+        </ul>
+        <button id="add-item-button">Add Item</button>
+    </div>
+
+    <!-- Page 2: Form for Adding/Modifying Items -->
+    <div id="item-form-page" style="display: none;">
+        <h1 id="form-title">Add New Item</h1>
+        <form id="item-form">
+            <label for="food-name">Food Name:</label>
+            <input type="text" id="food-name" name="food-name" required><br><br>
+
+            <label for="latitude">Latitude:</label>
+            <input type="number" id="latitude" name="latitude" step="any" required><br><br>
+
+            <label for="longitude">Longitude:</label>
+            <input type="number" id="longitude" name="longitude" step="any" required><br><br>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required><br><br>
+
+            <label for="unit">Unit:</label>
+            <input type="text" id="unit" name="unit" required><br><br>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description"></textarea><br><br>
+
+            <button type="submit" id="submit-item-button">Submit</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

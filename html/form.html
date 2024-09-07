@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Item List</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body>
+    <div class="pb-8">
+      <section class="bg-grey-50 px-4 pt-5 pb-4">
+        <!-- 動態內容 "ServiceStep" 無法用純 HTML 來表示，將其刪除 -->
+        <p class="font-bold mt-4">Hi 使用者，請填寫以下申辦資料</p>
+      </section>
+      <section>
+        <div class="py-5 px-4">
+          <button class="w-full flex justify-between items-center">
+            <div class="flex items-end">
+              <img
+                src="data:image/svg+xml,%3csvg%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_259_467)'%3e%3crect%20width='24'%20height='24'%20fill='none'/%3e%3cpath%20d='M12%2010.519C13.8761%2010.519%2015.397%208.99809%2015.397%207.12198C15.397%205.24586%2013.8761%203.72498%2012%203.72498C10.1239%203.72498%208.60303%205.24586%208.60303%207.12198C8.60303%208.99809%2010.1239%2010.519%2012%2010.519Z'%20stroke='%235AB4C5'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M4.35596%2020.275C4.35596%2016.527%207.78398%2013.481%2012.001%2013.481C16.218%2013.481%2019.645%2016.528%2019.645%2020.275'%20stroke='%235AB4C5'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_259_467'%3e%3crect%20width='24'%20height='24'%20fill='none'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e"
+                class="transition-transform"
+              /><span class="text-primary-500 font-bold ml-2">新增食物</span>
+            </div>
+          </button>
+          <div class="grid grid-rows-[0fr] transition-all grid-rows-[1fr]">
+            <div class="overflow-hidden flex flex-col gap-4 pt-5">
+              <div class="flex flex-col">
+                <label for="mail" class="field-label">
+                  食物名稱 <span>*</span></label
+                ><input
+                  type="text"
+                  id="mail"
+                  class="w-full base-input"
+                  placeholder="請輸入電子信箱"
+                /><!---->
+              </div>
+              <div class="flex flex-col">
+                <label for="county" class="field-label">
+                  縣市 <span>*</span></label
+                >
+                <div class="base-select-wrapper w-full">
+                  <select class="w-full base-select" id="county">
+                    <option value="">請選擇縣市</option>
+                    <option value="臺北市">臺北市</option>
+                    <option value="基隆市">基隆市</option>
+                    <option value="新北市">新北市</option>
+                    <option value="宜蘭縣">宜蘭縣</option>
+                    <option value="新竹市">新竹市</option>
+                    <option value="新竹縣">新竹縣</option>
+                    <option value="桃園市">桃園市</option>
+                    <option value="苗栗縣">苗栗縣</option>
+                    <option value="臺中市">臺中市</option>
+                    <option value="彰化縣">彰化縣</option>
+                    <option value="南投縣">南投縣</option>
+                    <option value="嘉義市">嘉義市</option>
+                    <option value="嘉義縣">嘉義縣</option>
+                    <option value="雲林縣">雲林縣</option>
+                    <option value="臺南市">臺南市</option>
+                    <option value="高雄市">高雄市</option>
+                    <option value="澎湖縣">澎湖縣</option>
+                    <option value="屏東縣">屏東縣</option>
+                    <option value="臺東縣">臺東縣</option>
+                    <option value="花蓮縣">花蓮縣</option>
+                    <option value="金門縣">金門縣</option>
+                    <option value="連江縣">連江縣</option>
+                  </select>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <label for="city" class="field-label">
+                  鄉鎮(市)區 <span>*</span></label
+                >
+                <div class="base-select-wrapper w-full">
+                  <select class="w-full base-select" id="city">
+                    <option value="">請選擇鄉鎮區</option>
+                  </select>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <label for="address" class="field-label">
+                  通訊地址 <span>*</span></label
+                ><input
+                  type="text"
+                  id="address"
+                  class="w-full base-input"
+                  placeholder="請輸入通訊地址"
+                /><!---->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="grid grid-cols-2 gap-x-2 px-2">
+        <a
+          href="/"
+          class="base-button text-center base-button--outline"
+          disabled="false"
+          >取消</a
+        ><button class="base-button base-button--rectangular">新增</button>
+      </div>
+      <!-- 刪除 "FormPreview" 組件的部分 -->
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
