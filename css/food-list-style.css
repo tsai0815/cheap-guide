@@ -10,8 +10,59 @@ body {
   display: flex;
 }
 
+.banner {
+  display: flex; /* 使用 Flexbox 使子元素排列 */
+  align-items: center; /* 垂直對齊 */
+  justify-content: center; /* 中間對齊 */
+  background-color: #f5f5f5; /* Banner 背景顏色 */
+  padding: 10px 20px; /* 內距調整 */
+  border-bottom: 1px solid #ddd; /* 底部邊框 */
+  position: fixed; /* 固定在視窗上方 */
+  top: 0; /* 距離頂部 0px */
+  width: 100%; /* 寬度為 100% */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加陰影 */
+  z-index: 1000; /* 確保在其他內容上方 */
+}
+
+/* 返回鍵樣式 */
+.back-button {
+  position: absolute; /* 使用絕對定位 */
+  left: 20px; /* 距離左邊 20px */
+  display: flex; /* 使圖標和按鈕內容對齊 */
+  align-items: center; /* 垂直對齊 */
+  text-decoration: none; /* 去除下劃線 */
+}
+
+/* 返回鍵圖標樣式 */
+.back-icon {
+  width: 24px; /* 設置圖標寬度 */
+  height: 24px; /* 設置圖標高度 */
+}
+
+/* Banner 內容樣式 */
+.banner-content {
+  display: flex; /* 使用 Flexbox 使圖標和文字排列 */
+  /* align-items: center; 垂直對齊 */
+  margin-right: 10%;
+  /* margin-left: auto; 將內容推到右側 */
+}
+
+/* Banner 圖標樣式 */
+.banner-icon {
+  width: 20px; /* 設置圖標寬度 */
+  height: 20px; /* 設置圖標高度 */
+  /* margin-right: 10px; 圖標與文字之間的間距 */
+}
+
+/* Banner 文字樣式 */
+.banner-text {
+  font-size: 18px; /* 設置字型大小 */
+  color: #333; /* 文字顏色 */
+  font-weight: bold; /* 文字加粗 */
+}
+
 .card-container {
-  /* margin-top: 2000px; */
+  margin-top: 50px;
   display: flex;
   flex-direction: column; /* Items stack vertically */
   width: 100%; /* Make container fill the full width */
