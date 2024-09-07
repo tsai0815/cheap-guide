@@ -3,8 +3,12 @@ let markerPosition = { lat: 25, lng: 121 };
 let oldImage = null;
 
 // Get the index of the item being edited (if any)
-const editIndex = localStorage.getItem('editIndex');
-console.log("editIndex: ", editIndex);
+let editIndex = localStorage.getItem('editIndex');
+if (editIndex===null) {
+    localStorage.setItem('editIndex', "null");
+    editIndex = localStorage.getItem('editIndex');
+}
+
 let items = JSON.parse(localStorage.getItem('items')) || [];
 
 // Load Google Maps script
