@@ -1,80 +1,90 @@
-const itemList = document.getElementById('item-list');
-const addItemButton = document.getElementById('add-item-button');
-const itemListPage = document.getElementById('item-list-page');
-const itemFormPage = document.getElementById('item-form-page');
-const formTitle = document.getElementById('form-title');
-const itemForm = document.getElementById('item-form');
+let map, marker;
 
-// Load items from localStorage
-let items = JSON.parse(localStorage.getItem('items')) || [];
+// Google Maps Initialization
+function initMap() {
+    const initialPosition = { lat: -34.397, lng: 150.644 }; // Default location
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: initialPosition,
+        zoom: 8
+    });
 
-// Function to save items to localStorage
-function saveItems() {
-    localStorage.setItem('items', JSON.stringify(items));
-}
+    marker = new google.maps.Marker({
+        position: initialPosition,
+        map: map,
+        draggable: true
+    });
 
-// Function to display the list of items
-function displayItems() {
-    itemList.innerHTML = ''; // Clear the list
-    items.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.textContent = `${item.name} - ${item.quantity} ${item.unit}`;
-        li.addEventListener('click', () => editItem(index));
-        itemList.appendChild(li);
+    // Update latitude and longitude on marker drag
+    google.maps.event.addListener(marker, 'dragend', function () {
+        document.getElementById('latitude').value = marker.getPosition().lat();
+        document.getElementById('longitude').value = marker.getPosition().lng();
     });
 }
 
-// Function to add a new item
-addItemButton.addEventListener('click', () => {
-    formTitle.textContent = "Add New Item";
-    itemForm.reset();
-    itemFormPage.style.display = 'block';
-    itemListPage.style.display = 'none';
-});
+// Load Google Maps script
+const script = document.createElement('script');
+script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA&callback=initMap`;
+script.async = true;
+document.head.appendChild(script);
 
-// Function to handle form submission
-itemForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const newItem = {
-        name: document.getElementById('food-name').value,
-        latitude: parseFloat(document.getElementById('latitude').value),
-        longitude: parseFloat(document.getElementById('longitude').value),
-        quantity: parseInt(document.getElementById('quantity').value, 10),
-        unit: document.getElementById('unit').value,
-        description: document.getElementById('description').value
-    };
+// Get the index of the item being edited (if any)
+const editIndex = localStorage.getItem('editIndex');
+let items = JSON.parse(localStorage.getItem('items')) || [];
 
-    // If editing, update the item, otherwise add a new item
-    const editIndex = itemForm.dataset.editIndex;
-    if (editIndex) {
-        items[editIndex] = newItem;
-        delete itemForm.dataset.editIndex; // Clear edit index after saving
-    } else {
-        items.push(newItem);
-    }
-
-    saveItems(); // Save the updated items to localStorage
-    itemFormPage.style.display = 'none';
-    itemListPage.style.display = 'block';
-    displayItems();
-});
-
-// Function to edit an existing item
-function editItem(index) {
-    formTitle.textContent = "Edit Item";
-    const item = items[index];
-    document.getElementById('food-name').value = item.name;
-    document.getElementById('latitude').value = item.latitude;
-    document.getElementById('longitude').value = item.longitude;
+// Pre-fill form if editing
+if (editIndex !== null) {
+    const item = items[editIndex];
+    document.getElementById('name').value = item.name;
     document.getElementById('quantity').value = item.quantity;
     document.getElementById('unit').value = item.unit;
     document.getElementById('description').value = item.description;
-    
-    itemForm.dataset.editIndex = index; // Store the index being edited
-
-    itemFormPage.style.display = 'block';
-    itemListPage.style.display = 'none';
+    document.getElementById('latitude').value = item.latitude;
+    document.getElementById('longitude').value = item.longitude;
+    marker.setPosition({ lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) });
+    map.setCenter(marker.getPosition());
+    document.getElementById('form-title').textContent = "Edit Food";
 }
 
-// Initial display of items when the page loads
-displayItems();
+// Attach event listener to the submit button
+document.getElementById('submit-item-button').addEventListener('click', function (event) {
+    const newItem = {
+        name: document.getElementById('name').value,
+        quantity: document.getElementById('quantity').value,
+        unit: document.getElementById('unit').value,
+        description: document.getElementById('description').value,
+        latitude: document.getElementById('latitude').value,
+        longitude: document.getElementById('longitude').value,
+        image: '' // Placeholder for image data
+    };
+
+    // Handle image upload
+    const imageInput = document.getElementById('image').files[0];
+    if (imageInput) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            newItem.image = e.target.result; // Store image as base64
+            saveItem(newItem); // Save the item after image processing
+        };
+        reader.readAsDataURL(imageInput); // Convert image to base64
+    } else {
+        saveItem(newItem); // Save item without image
+    }
+});
+
+// Save item and redirect
+function saveItem(item) {
+    const editIndex = localStorage.getItem('editIndex');
+    let items = JSON.parse(localStorage.getItem('items')) || [];
+
+    if (editIndex !== null) {
+        items[editIndex] = item; // Update the existing item
+    } else {
+        items.push(item); // Add a new item
+    }
+
+    localStorage.setItem('items', JSON.stringify(items)); // Save items back to localStorage
+
+    // Redirect to myFoods.html after saving
+    window.location.href = 'myFoodList.html';
+}
+
