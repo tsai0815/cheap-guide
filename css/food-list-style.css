@@ -149,8 +149,8 @@ body {
 
 .add-button {
   position: fixed; /* 固定在視窗 */
-  bottom: 5px; /* 距離底部 20px */
-  right: 5px; /* 距離右邊 20px */
+  bottom: 15px; /* 距離底部 20px */
+  right: 15px; /* 距離右邊 20px */
   background: none; /* 無背景 */
   border: none; /* 無邊框 */
   padding: 0; /* 無內距 */
@@ -161,8 +161,8 @@ body {
 }
 
 .add-icon {
-  width: 50px; /* 設置圖標寬度 */
-  height: 50px; /* 設置圖標高度 */
+  width: 60px; /* 設置圖標寬度 */
+  height: 60px; /* 設置圖標高度 */
 }
 
 .delete-button {
