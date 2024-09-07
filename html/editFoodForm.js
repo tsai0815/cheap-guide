@@ -1,21 +1,46 @@
 let map, marker;
-let initialPosition = { lat: 25, lng: 121 };
+let markerPosition = { lat: 25, lng: 121 };
+let oldImage = null;
+
+// Get the index of the item being edited (if any)
+const editIndex = localStorage.getItem('editIndex');
+console.log("editIndex: ", editIndex);
+let items = JSON.parse(localStorage.getItem('items')) || [];
+
+// Load Google Maps script
+const script = document.createElement('script');
+script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA&callback=initMap`;
+script.async = true;
+document.head.appendChild(script);
 
 // Google Maps Initialization
 function initMap() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(success, error);
+    // Pre-fill form if editing
+    if (editIndex !== "null") {
+        const item = items[editIndex];
+        document.getElementById('name').value = item.name;
+        document.getElementById('quantity').value = item.quantity;
+        document.getElementById('unit').value = item.unit;
+        document.getElementById('description').value = item.description;
+        document.getElementById('latitude').value = item.latitude;
+        document.getElementById('longitude').value = item.longitude;
+        oldImage = item.image;
+        markerPosition = { lat: item.latitude, lng: item.longitude };
     } else {
-        console.log('gps not supported');
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            console.log('gps not supported');
+        }
     }
 
     map = new google.maps.Map(document.getElementById('map'), {
-        center: initialPosition,
+        center: markerPosition,
         zoom: 8
     });
 
     marker = new google.maps.Marker({
-        position: initialPosition,
+        position: markerPosition,
         map: map,
         draggable: true
     });
@@ -29,38 +54,11 @@ function initMap() {
 
 function success(position) {
     console.log(position.coords.latitude + ', ' + position.coords.longitude);
-    initialPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
-    map.setCenter(position.coords.latitude, position.coords.longitude, 8);
+    markerPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
 }
 
 function error(msg) {
     console.log("gps failed");
-}
-
-// Load Google Maps script
-const script = document.createElement('script');
-script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA&callback=initMap`;
-script.async = true;
-document.head.appendChild(script);
-
-// Get the index of the item being edited (if any)
-const editIndex = localStorage.getItem('editIndex');
-console.log("editIndex: ", editIndex);
-let items = JSON.parse(localStorage.getItem('items')) || [];
-
-// Pre-fill form if editing
-if (editIndex !== null) {
-    const item = items[editIndex];
-    localStorage.setItem('editIndex', null);
-    document.getElementById('name').value = item.name;
-    document.getElementById('quantity').value = item.quantity;
-    document.getElementById('unit').value = item.unit;
-    document.getElementById('description').value = item.description;
-    document.getElementById('latitude').value = item.latitude;
-    document.getElementById('longitude').value = item.longitude;
-    marker.setPosition({ lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) });
-    map.setCenter(marker.getPosition());
-    document.getElementById('form-title').textContent = "Edit Food";
 }
 
 // Attach event listener to the submit button
@@ -85,6 +83,9 @@ document.getElementById('submit-item-button').addEventListener('click', function
         };
         reader.readAsDataURL(imageInput); // Convert image to base64
     } else {
+        if (oldImage !== null) {
+            newItem.image = oldImage;
+        }
         saveItem(newItem); // Save item without image
     }
 });
@@ -94,7 +95,7 @@ function saveItem(item) {
     const editIndex = localStorage.getItem('editIndex');
     let items = JSON.parse(localStorage.getItem('items')) || [];
 
-    if (editIndex !== null) {
+    if (editIndex !== "null") {
         items[editIndex] = item; // Update the existing item
     } else {
         items.push(item); // Add a new item

@@ -81,8 +81,19 @@ body {
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: #d45251;
-  color: white;
+  background-color: #e8e8e8;
+  color: #000;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.top-right-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #e8e8e8;
+  color: #000;
   padding: 5px 10px;
   border-radius: 20px;
   font-size: 12px;
@@ -134,11 +145,7 @@ body {
   font-weight: bold;
 }
 
-.category {
-  background-color: #e8e8e8;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
+
 
 .add-button {
   position: fixed; /* 固定在視窗 */
@@ -150,9 +157,28 @@ body {
   cursor: pointer; /* 滑鼠移到按鈕上顯示手型 */
   display: flex; /* 使按鈕內的圖片可以居中對齊 */
   align-items: center; /* 垂直置中 */
+  z-index: 10;
 }
 
 .add-icon {
   width: 50px; /* 設置圖標寬度 */
   height: 50px; /* 設置圖標高度 */
+}
+
+.delete-button {
+  position: absolute;
+  bottom: 10px; /* Adjust this value as needed */
+  right: 10px; /* Adjust this value as needed */
+  background-color: #ff8558; /* Background color of the button */
+  color: white; /* Text color of the button */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners for the button */
+  padding: 5px 10px; /* Padding inside the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  z-index: 10; /* Ensure it appears above other content */
+  font-size: 12px;
+}
+
+.delete-button:hover {
+  background-color: #FF4500; /* Darker color on hover */
 }
