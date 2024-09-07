@@ -139,13 +139,17 @@ function showNearbyInfo() {
     const itemElement = document.createElement('div');
     itemElement.className = 'info-item';
     itemElement.innerHTML = `
-      <img class="info-item-image" src="${point.imageUrl}" alt="${point.name}">
-      <div class="info-item-text">
-        <h3>${point.name}</h3>
-        <p>數量: ${point.quantity}</p>
-        <p>${point.description}</p>
-        <p>距離: ${point.distance} 公尺</p>
-      </div>
+        <img class="info-item-image" src="${point.imageUrl}" alt="${point.name}">
+        <div class="info-item-section">
+          <span class="info-title">${point.name}</span>
+        </div>
+        <div class="info-details">
+          <div class="info-left-content">
+            <p>${point.description}</p>
+            <p>距離: ${point.distance} 公尺</p>
+          </div>
+          <span class="info-qt">數量: ${point.quantity}</span>
+        </div>
     `;
     nearbyInfoContent.appendChild(itemElement);
   });
