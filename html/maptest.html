@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Map GoShare Style</title>
+    <link rel="stylesheet" href="../css/home-map.css">
+    <script src="../js/home-map.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="input-container">
+        <a href="myFoods.html" class="my-button">我的</a>
+        <button id="go-button" class="go-button" onclick="showNearbyInfo()">Go</button>
+        <a href="foodForm.html" class="add-button">新增</a>
+    </div>
+    <div id="nearby-info">
+        <div id="nearby-info-content"></div>
+    </div>
+    <div id="cancel-container">
+      <button id="cancel-button" class="cancel-button" onclick="hideNearbyInfo()" style="display:none;">×</button>
+    </div>
+    <div id="info-panel">
+        <div id="info-panel-content">
+            <div id="info-text">
+                <h2 id="place-name"></h2>
+                <p id="place-quantity"></p>
+                <p id="place-description"></p>
+                <p id="place-distance"></p>
+            </div>
+            <img id="place-image" src="" alt="Place Image">
+        </div>
+    </div>
+
+    <!-- 引入 Google Maps API，注意添加了 geometry 庫 -->
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA&libraries=geometry&callback=initMap"
+    ></script>
+
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <title>Google Map with Address, Info, and Image</title>
+    <style>
+      /* 設定地圖與輸入框的樣式 */
+      #map {
+        height: 70vh;
+        width: 100%;
+      }
+      #input-container {
+        margin: 10px;
+      }
+      input[type="text"] {
+        width: 200px;
+        padding: 10px;
+        margin-right: 10px;
+      }
+      button {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>輸入地址與資訊來標記地點（含圖片）</h3>
+    <div id="input-container">
+      <input id="address" type="text" placeholder="請輸入地址">
+      <input id="name" type="text" placeholder="名稱">
+      <input id="quantity" type="text" placeholder="數量">
+      <input id="description" type="text" placeholder="描述">
+      <input id="image-url" type="text" placeholder="圖片檔名 (例如: image.jpg)">
+      <button onclick="geocodeAddress()">標記地址</button>
+    </div>
+    <div id="map"></div>
+
+    <script>
+      let map;
+      let geocoder;
+      let marker;
+      let infowindow;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 25.0330, lng: 121.5654 }, // 台北市的初始位置
+          zoom: 13,
+        });
+        geocoder = new google.maps.Geocoder();
+        infowindow = new google.maps.InfoWindow(); // 用來顯示資訊
+      }
+
+      // 地址轉換成地點並標記
+      function geocodeAddress() {
+        const address = document.getElementById("address").value;
+        const name = document.getElementById("name").value;
+        const quantity = document.getElementById("quantity").value;
+        const description = document.getElementById("description").value;
+        const imageUrl = document.getElementById("image-url").value;
+
+        geocoder.geocode({ address: address }, (results, status) => {
+          if (status === "OK") {
+            // 清除之前的標記
+            if (marker) {
+              marker.setMap(null);
+            }
+
+            // 設定新的標記
+            const location = results[0].geometry.location;
+            marker = new google.maps.Marker({
+              map: map,
+              position: location,
+              icon: {
+                url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // 紅色標記
+              },
+            });
+
+            // 設定點擊事件，顯示資訊視窗，包含圖片
+            marker.addListener("click", () => {
+              const contentString = `
+                <div>
+                  <h4>${name}</h4>
+                  <p><strong>數量：</strong> ${quantity}</p>
+                  <p><strong>描述：</strong> ${description}</p>
+                  <img src="${imageUrl}" alt="${name} 圖片" style="width:100px; height:auto;"/>
+                </div>
+              `;
+              infowindow.setContent(contentString);
+              infowindow.open(map, marker);
+            });
+
+            // 將地圖中心設為新標記的位置
+            map.setCenter(location);
+          } else {
+            alert("Geocode was not successful for the following reason: " + status);
+          }
+        });
+      }
+    </script>
+
+    <!-- 引入 Google Maps API -->
+<!--     <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxq5E8_KIe1XaWukL1a9WOib15AI-o1mQ
+      &callback=initMap"
+    ></script>
+  </body>
+</html> --> 

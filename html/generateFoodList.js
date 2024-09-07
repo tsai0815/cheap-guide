@@ -27,7 +27,6 @@ function displayItems() {
                 <button class="delete-button" onclick="deleteItem(${index}); event.stopPropagation();">DELETE</button> <!-- Delete Button -->
             </div>
         </div>
-        </div>
     `;
         itemList.appendChild(card);
     });
