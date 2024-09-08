@@ -74,7 +74,7 @@ function updateDistances(userLocation) {
   });
 
   // 更新顯示的信息
-  updateMarkerList();
+  // updateMarkerList();
 }
 
 function addMarkersFromLocalStorage() {
