@@ -24,7 +24,7 @@ p {
   gap: 10px;
 }
 .go-button, .my-button, .add-button {
-  background-color: #00b8a9;
+  background-color: #71C5D5;
   color: white;
   border: none;
   border-radius: 50%;
@@ -42,10 +42,10 @@ p {
   font-size: 14px;
 }
 .my-button {
-  background-color: #3498db;
+  background-color: #5aa8d5;
 }
 .add-button {
-  background-color: #2ecc71;
+  background-color: #43c48a;
 }
 #nearby-info {
   position: absolute;
