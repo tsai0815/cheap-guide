@@ -81,16 +81,38 @@ function getMDTime() {
 
 // Attach event listener to the submit button
 document.getElementById('submit-item-button').addEventListener('click', async function (event) {
-    const apiKey = "AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA"; // 將這裡替換為您的實際 API 金鑰
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${marker.getPosition().lat()},${marker.getPosition().lng()}&key=${apiKey}`;
-    let data;
+    // const apiKey = "AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA"; // 將這裡替換為您的實際 API 金鑰
+    // const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${marker.getPosition().lat()},${marker.getPosition().lng()}&key=${apiKey}`;
+    // let data;
+    // try {
+    //     const response = await fetch(url);
+    //     if (response.ok) {
+    //         data = await response.json();
+    //         // 轉換為格式化的字符串，然後使用 alert 彈出
+    //         data = data.results[0].formatted_address
+    //         console.log(data);
+    //     } else {
+    //         console.log(`HTTP Error: ${response.status}`);
+    //     }
+    // } catch (error) {
+    //     console.log(`Error: ${error.message}`);
+    // }
+    let address = document.getElementById('address').value
+    const apiKey = "AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA"; 
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+    
     try {
         const response = await fetch(url);
         if (response.ok) {
-            data = await response.json();
-            // 轉換為格式化的字符串，然後使用 alert 彈出
-            data = data.results[0].formatted_address
-            console.log(data);
+            const data = await response.json();
+            if (data.results && data.results.length > 0) {
+                const formattedAddress = data.results[0].formatted_address;
+                const location = data.results[0].geometry.location;
+                console.log(`Address: ${formattedAddress}, Latitude: ${location.lat}, Longitude: ${location.lng}`);
+                
+                // Store the address, latitude, and longitude in localStorage
+                markerPosition = {lat:location.lat, lng:location.lng}
+            }
         } else {
             console.log(`HTTP Error: ${response.status}`);
         }
@@ -103,9 +125,9 @@ document.getElementById('submit-item-button').addEventListener('click', async fu
         quantity: document.getElementById('quantity').value,
         unit: document.getElementById('unit').value,
         description: document.getElementById('description').value,
-        latitude: marker.getPosition().lat(),
-        longitude: marker.getPosition().lng(),
-        addressName: data,
+        latitude: markerPosition.lat,
+        longitude: markerPosition.lng,
+        addressName: document.getElementById('address').value,
         lastEditTime: getMDTime(),
         image: '' // Placeholder for image data
     };
@@ -143,4 +165,3 @@ function saveItem(item) {
     // Redirect to myFoods.html after saving
     window.location.href = 'myFoodList.html';
 }
-
