@@ -13,7 +13,7 @@ let items = JSON.parse(localStorage.getItem('items')) || [];
 
 // Load Google Maps script
 const script = document.createElement('script');
-script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA&callback=initMap`;
+script.src = `https://maps.googleapis.com/maps/api/js?key= your key &callback=initMap`;
 script.async = true;
 document.head.appendChild(script);
 
@@ -81,24 +81,8 @@ function getMDTime() {
 
 // Attach event listener to the submit button
 document.getElementById('submit-item-button').addEventListener('click', async function (event) {
-    // const apiKey = "AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA"; // 將這裡替換為您的實際 API 金鑰
-    // const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${marker.getPosition().lat()},${marker.getPosition().lng()}&key=${apiKey}`;
-    // let data;
-    // try {
-    //     const response = await fetch(url);
-    //     if (response.ok) {
-    //         data = await response.json();
-    //         // 轉換為格式化的字符串，然後使用 alert 彈出
-    //         data = data.results[0].formatted_address
-    //         console.log(data);
-    //     } else {
-    //         console.log(`HTTP Error: ${response.status}`);
-    //     }
-    // } catch (error) {
-    //     console.log(`Error: ${error.message}`);
-    // }
     let address = document.getElementById('address').value
-    const apiKey = "AIzaSyDa2zggbUAtegTnnP6cU6Qw7AUc-1RhZnA"; 
+    const apiKey = "your-api-key"; 
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
     
     try {
